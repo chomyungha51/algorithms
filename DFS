@@ -1,0 +1,56 @@
+#include <stdio.h>
+#include <stdlib.h>
+#define MAX_SIZE 100
+
+//단일 연결 리스트
+typedef struct node {
+	int key;
+	struct node* next;
+}Node;
+
+Node* Test;
+
+//제일 마지막 위치에 value값 가진 노드 추가하기
+void addNode(Node* h, int value) {
+	Node* new = (Node*)malloc(sizeof(Node));
+	while (h->next != NULL) {
+		h = h->next;
+	}
+	new->key = value;
+	new->next = NULL;
+	h->next = new;
+ }
+
+//방문했나 안했나 검사용
+int visited[MAX_SIZE];
+
+//재귀
+void DFS_Recursive(int point) {
+	//이미 방문했으면 return
+	if (visited[point] == 1)
+		return;
+	//처음 방문하면 visited 값을 1로 바꿔주고, 출력
+	visited[point] = 1;
+	printf("%d ", point);
+	//맨 마지막 값까지 탐색
+	Node* current = Test->next;
+	while (current->next != NULL) {
+		int post = current->key;
+		DFS_Recursive(post);
+		current = current->next;
+	}
+}
+
+
+void main() {
+	int num; int data;
+	printf("How many numbers do you want to input to the graph?: ");
+	scanf("%d", &num);
+	printf("Input values: ");
+	for (int i = 0; i < num; i++) {
+		addNode(Test, i+1);
+	}
+	printf("탐색 시작: ");
+	//재귀함수 이용한 방법
+	DFS_Recursive(Test, 1);
+}
