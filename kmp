@@ -1,0 +1,60 @@
+#include <stdio.h>
+#include <string.h>
+
+char s[1000] = { 0, }, p[100] = { 0, };
+int n=0;int m=0; 
+int pi[100] = { 0, };
+
+void find_pi()
+{
+    pi[0] = -1;
+    //패턴 길이만큼 반복
+    for (int i = 1; i < m; i++) {
+        int j = pi[i - 1];
+        //일치해 오다가 달라진 경우 내 앞의 값과 일치하는 가장 낮은 인덱스로 이동 후 다시 비교
+        while (p[i] != p[j + 1] && j >= 0) {
+            j = pi[j];
+        }
+        //값이 같은 경우 앞 인덱스+1 한 값 저장
+        if (p[i] == p[j + 1])
+            pi[i] = j + 1;
+        //값이 다른 경우 -1
+        else
+            pi[i] = -1;
+    }
+}
+void kmp()
+{
+    int i = 0, j = 0;
+    //문자열이 끝나거나 패턴이 끝날 때까지
+    while (i < n && j<m)
+    {   //패턴과 매치하면 다음 문자열 비교
+        if (s[i] == p[j])
+            i++, j++;
+        //패턴 처음부터 일치 안 하면 문자열만 뒤로 이동
+        else if (j == 0)
+            i++;
+        //중간까지 가서 일치 안 하면 pi사용해서 가장 많이 매치됐던 바로 이전 인덱스의 다음 문자열과 비교
+        else
+            j = pi[j - 1] + 1;
+        
+    }
+    if (j == m)
+    {
+        printf("Pattern Matched!\n");
+    }
+    else {
+        printf("No pattern!\n");
+    }
+}
+int main()
+{
+    printf("Input a sting: ");
+    scanf("%s", s);
+    printf("Input a pattern: ");
+    scanf("%s", p);
+    n = strlen(s), m = strlen(p);
+    find_pi();
+    kmp();
+    return 0;
+}
