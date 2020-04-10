@@ -1,0 +1,79 @@
+#include <stdio.h>
+#define QueueSize 10
+
+typedef struct node {
+	int key;
+	struct tree* left;
+	struct tree* right;
+}node;
+
+void bfs(node* root) {
+    //노드 인덱스
+    int i = 1; int front = 1;
+    //부모 노드 포인터
+    node* parent = root;
+    //방문 순서 queue에 저장
+    int queue[11];
+ 
+    //queue가 10개 찰 때까지 반복
+    while (front != 11) {
+        //인덱스 값이 key 값이랑 같음. 부모노드->왼쪽->오른쪽 순으로 방문
+        queue[i] = i;
+        queue[2 * i] = 2 * i;
+        queue[2 * i + 1] = 2 * i + 1;
+        printf(" %d ", queue[front++]);
+        i = queue[front];
+    }
+}
+void insert(node* root, int key)
+{
+    node* parent = root;//부모노드 포인터
+    node* new; // n은 새로운 노드
+
+    // 새로 삽입될 노드를 생성한다.
+    new = (node*)malloc(sizeof(node));
+    new->key = key;
+    new->left = new->right = NULL;
+
+    //루트노드가 없는 경우
+    if (root->key == NULL) {
+        root = new;
+        return;
+    }
+    else {
+        // 탐색을 먼저 수행한다.
+        while (1) {
+            // 부모의 키 값과 비교
+            if (key < parent->key) {
+                if (parent->left == NULL) {
+                    parent->left = new;
+                    return;
+                }
+                parent = parent->left; // 현재 노드는 부모의 왼쪽 서브트리가 된다.
+            }
+            else {
+                if (parent->right == NULL) {
+                    parent->right = new;
+                    return;
+                }
+                parent = parent->right; // 현재 노드는 부모의 오른쪽 서브트리가 된다.
+            }
+        }
+    }
+}
+
+void main() {
+	//이진트리에 데이터 삽입하기
+    printf("초기 데이터:");
+    //루트노드 세팅하기
+    node* q = (node*)malloc(sizeof(node));
+
+	for (int i = 1; i < 11; i++) {
+		insert(q, i);
+		printf(" %d ", i);
+	}
+    printf("BFS 후 데이터: ");
+	//넓이우선탐색 시작
+	bfs(q);
+
+}
