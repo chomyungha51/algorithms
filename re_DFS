@@ -1,0 +1,68 @@
+#define _CRT_SECURE_NO_WARNINGS
+#define MAX_SIZE 30
+
+#include <stdio.h>
+
+
+//인접 행렬(data가 저장되어 있는 공간)
+int data[MAX_SIZE][MAX_SIZE] = { 0, };
+
+//방문 여부 저장할 배열, 방문 순서 저장할 스택, top 변수 선언
+int visited[MAX_SIZE] = { 0, }; int stack[MAX_SIZE] = { 0, };
+int top = -1;
+
+int count = 1;
+
+void dfs(int start) {
+	//시작점 방문했다고 표시하고 스택에 추가
+	visited[start] = 1;
+	stack[++top] = start;
+	printf("시작: %d ", start);
+
+	//스택이 빌 때까지 반복
+	while (top>=0) {
+		//현재 기준점 cur에 저장
+		int cur = stack[top--];
+
+		//자식 데이터 없을 때까지 반복
+		for (int i = 0; i <= MAX_SIZE; i++) {
+			//지금 데이터와 연결되어 있는 데이터가 있고, 그 데이터를 방문하지 않았을 때
+			if (data[cur][i] == 1 && !visited[i]) {
+
+				//방문했다고 표시하고 스택에 추가
+				visited[i] = 1;
+				stack[++top] = i;
+			}
+		}
+		if (stack[top] == 0) {
+			return;
+		}
+		//더 이상 자식이 없으면 가장 최근에 방문한 노드 출력
+		printf("%d ",stack[top]);
+	}
+
+}
+
+void main() {
+
+	printf("그래프에 삽입할 데이터를 '부모 자식' 쌍으로 입력하시오: (*부모와 자식 양 쪽에 -1을 입력할 때까지 반복, 30이하의 양수여야 함)\n");
+	int data1; int data2;
+
+	while (1) {
+
+		scanf("%d %d", &data1, &data2);
+
+		if (data1 == -1 && data2 == -1)
+			break;
+		//data배열에다 서로 연결되었다는 표시
+		data[data1][data2] = data[data2][data1] = 1;
+		count++;
+	}
+
+	int start;
+	printf("탐색을 시작할 데이터를 입력하시오: ");
+	scanf("%d", &start);
+
+	printf("==========DFS 시작==========\n");
+	dfs(start);
+}
